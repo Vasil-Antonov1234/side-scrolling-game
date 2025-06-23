@@ -52,7 +52,13 @@ body {
 }
 
 .health {
-    color: white;
+    color: rgb(116, 216, 116);
+    text-align: center;
+    margin-left: 10px;
+}
+
+.health-danger {
+    color: red;
     text-align: center;
     margin-left: 10px;
 }

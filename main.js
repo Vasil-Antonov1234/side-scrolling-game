@@ -203,6 +203,11 @@ function onGameStart() {
         // Aply health
         gameHealthPointsEl.textContent = scene.health;
 
+        // Midify Health
+        if (scene.health < 30) {
+            gameHealthEl.classList.add("health-danger");
+        };
+
         // Midify fireball positions
         let fireBalls = document.querySelectorAll(".fire-ball");
 
@@ -222,7 +227,7 @@ function onGameStart() {
             if (isCollision(wizard, bug)) {
                 scene.health--;
                 
-                if (scene.health <= 0) {
+                if (scene.health < 0) {
                   gameOverAction();  
                 };
             };
