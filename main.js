@@ -32,12 +32,15 @@ function onGameStart() {
         fireInterval: 1000,
         cloudSpawnInterval: 3000,
         bugSpawnInterval: 1000,
-        bugKillBonus: 2000
+        bugKillBonus: 2000,
+        bigCloudSpawnInterval: 2000,
+        bigCloudsMovingMultiplier: 4.9
     };
 
     let scene = {
         score: 0,
         lastCloudSpawn: 0,
+        lastBigCloudSpawn: 0,
         lastBugSpawn: 0,
         isActiveGame: true
     }
@@ -142,6 +145,31 @@ function onGameStart() {
             };
         });
 
+        // Add big clouds
+        if (timestamp - scene.lastBigCloudSpawn > game.bigCloudSpawnInterval + 900000 * Math.random()) {
+            let bigCloud = document.createElement("div");
+            bigCloud.classList.add("big-cloud");
+            bigCloud.x = gameAreaEL.offsetWidth - 700;
+            bigCloud.style.left = bigCloud.x + "px";
+            bigCloud.style.top = (gameAreaEL.offsetHeight - 700) * Math.random() + "px";
+            gameAreaEL.appendChild(bigCloud);
+            scene.lastBigCloudSpawn = timestamp;
+        };
+
+        // Modify big cloud positions
+        let bigClouds = document.querySelectorAll(".big-cloud");
+
+        bigClouds.forEach((bigCloud) => {
+            bigCloud.x -= game.speed * game.bigCloudsMovingMultiplier;
+            bigCloud.style.left = bigCloud.x + "px";
+
+            if (bigCloud.x + bigClouds.offsetWidth <= 0) {
+                bigCloud.parentElement.removeChild(bigCloud);
+            };
+        });
+        
+
+
         // Add bugs
         if (timestamp - scene.lastBugSpawn > game.bugSpawnInterval + 5000 * Math.random()) {
             let bug = document.createElement("div");
@@ -205,6 +233,14 @@ function onGameStart() {
             window.requestAnimationFrame(gameAction);
         };
 
+    }
+
+
+    // refresh the game
+    gameOverEl.addEventListener("click", onRefreshPage);
+
+    function onRefreshPage() {
+        window.location.reload();
     }
 
     function addFireBall() {

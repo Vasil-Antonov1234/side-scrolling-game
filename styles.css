@@ -33,7 +33,7 @@ body {
     border-radius: 30px;
     top: 100px;
     left: 35%;
-    z-index: 1;
+    z-index: 102;
     text-align: center;
     padding: 30px;
 }
@@ -79,6 +79,16 @@ body {
     height: 200px;
     background-image: url(./images/cloud.png);
     background-size: cover;
+}
+
+.big-cloud {
+    z-index: 101;
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    background-image: url(./images/bigCloud.png);
+    background-size: cover;
+    opacity: 94%;
 }
 
 
