@@ -38,10 +38,23 @@ body {
     padding: 30px;
 }
 
+.health-score-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: black;
+}
+
 .game-score {
-    background-color: black;
+    /*background-color: black;*/
     color: white;
     text-align: center;
+    margin-right: 10px;
+}
+
+.health {
+    color: white;
+    text-align: center;
+    margin-left: 10px;
 }
 
 .hide {
