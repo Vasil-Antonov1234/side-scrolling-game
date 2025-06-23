@@ -4,6 +4,8 @@ const gameAreaEL = document.querySelector(".game-area");
 const gameOverEl = document.querySelector(".game-over");
 const gameScoreEl = document.querySelector(".game-score");
 const gamePointsEl = gameScoreEl.querySelector(".points");
+const gameHealthEl = document.querySelector(".health");
+const gameHealthPointsEl = gameHealthEl.querySelector(".health-points");
 
 // game start listener
 gameStartEl.addEventListener("click", onGameStart);
@@ -39,6 +41,7 @@ function onGameStart() {
 
     let scene = {
         score: 0,
+        health: 100,
         lastCloudSpawn: 0,
         lastBigCloudSpawn: 0,
         lastBugSpawn: 0,
@@ -196,6 +199,9 @@ function onGameStart() {
         
         // Aply score
         gamePointsEl.textContent = scene.score;
+        
+        // Aply health
+        gameHealthPointsEl.textContent = scene.health;
 
         // Midify fireball positions
         let fireBalls = document.querySelectorAll(".fire-ball");
@@ -214,7 +220,11 @@ function onGameStart() {
         // Collision detection
         bugs.forEach((bug) => {
             if (isCollision(wizard, bug)) {
-                gameOverAction();
+                scene.health--;
+                
+                if (scene.health <= 0) {
+                  gameOverAction();  
+                };
             };
 
             fireBalls.forEach((ball) => {
