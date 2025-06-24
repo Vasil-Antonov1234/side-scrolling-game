@@ -35,8 +35,9 @@ function onGameStart() {
         cloudSpawnInterval: 3000,
         bugSpawnInterval: 1000,
         bugKillBonus: 2000,
-        bigCloudSpawnInterval: 2000,
-        bigCloudsMovingMultiplier: 4.9
+        bigCloudSpawnInterval: 4000,
+        bigCloudsMovingMultiplier: 4.9,
+        healthSpawnInterval: 20000,
     };
 
     let scene = {
@@ -45,6 +46,7 @@ function onGameStart() {
         lastCloudSpawn: 0,
         lastBigCloudSpawn: 0,
         lastBugSpawn: 0,
+        lastHealthSpown: 0,
         isActiveGame: true
     }
 
@@ -196,6 +198,30 @@ function onGameStart() {
             };
         });
 
+        // Add health
+        if (timestamp - scene.lastHealthSpown > game.healthSpawnInterval + 5000 * Math.random()) {
+            let healthBonus = document.createElement("div");
+            healthBonus.classList.add("health-bonus");
+            healthBonus.x = gameAreaEL.offsetWidth - 60;
+            healthBonus.style.left = healthBonus.x + "px";
+            healthBonus.style.top = (gameAreaEL.offsetHeight - 60) * Math.random() + "px";
+            gameAreaEL.appendChild(healthBonus);
+            scene.lastHealthSpown = timestamp;
+        }
+        
+        // Modify healthBonus positions
+        let healthBonuses = document.querySelectorAll(".health-bonus");
+
+        healthBonuses.forEach((hBonus) => {
+            hBonus.x -= game.speed;
+            hBonus.style.left = hBonus.x + "px";
+
+            if (hBonus.x + healthBonuses.offsetWidth <= 0) {
+                hBonus.parentElement.removeChild(hBonus);
+            };
+        });
+
+
         
         // Aply score
         gamePointsEl.textContent = scene.score;
@@ -203,10 +229,12 @@ function onGameStart() {
         // Aply health
         gameHealthPointsEl.textContent = scene.health;
 
-        // Midify Health
+        // Add Low-Health Indicator
         if (scene.health < 30) {
             gameHealthEl.classList.add("health-danger");
-        };
+        } else {
+            gameHealthEl.classList.remove("health-danger");
+        }
 
         // Midify fireball positions
         let fireBalls = document.querySelectorAll(".fire-ball");
@@ -239,6 +267,18 @@ function onGameStart() {
                     ball.parentElement.removeChild(ball);
                 };
             });
+        });
+
+        healthBonuses.forEach((hBonus) => {
+            if (isCollision(wizard, hBonus)) {
+                scene.health += 30;
+
+                if (scene.health > 100) {
+                    scene.health = 100
+                };
+                
+                hBonus.parentElement.removeChild(hBonus);
+            };
         });
 
         
