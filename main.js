@@ -38,6 +38,7 @@ function onGameStart() {
         bigCloudSpawnInterval: 4000,
         bigCloudsMovingMultiplier: 4.9,
         healthSpawnInterval: 20000,
+        stoneSpawnInterval: 2000
     };
 
     let scene = {
@@ -47,6 +48,7 @@ function onGameStart() {
         lastBigCloudSpawn: 0,
         lastBugSpawn: 0,
         lastHealthSpown: 0,
+        lastStoneSpown: 0,
         isActiveGame: true
     }
 
@@ -220,6 +222,29 @@ function onGameStart() {
                 hBonus.parentElement.removeChild(hBonus);
             };
         });
+        
+        // Add stones
+        if (timestamp - scene.lastStoneSpown > game.stoneSpawnInterval + 5000 * Math.random() && timestamp > 10000) {
+          let stone = document.createElement("div");
+          stone.classList.add("stone");
+          stone.x = gameAreaEL.offsetHeight - 60;
+          stone.style.top = stone.x + "px";
+          stone.style.left = (gameAreaEL.offsetWidth - 60) * Math.random() + "px";
+          gameAreaEL.appendChild(stone);
+          scene.lastStoneSpown = timestamp;
+        }
+        
+        // Modify stone positions
+        let stones = document.querySelectorAll(".stone");
+        
+        stones.forEach((currstone) => {
+          currstone.x -= game.speed * 4;
+          currstone.style.top = currstone.x + "px";
+          
+          if (currstone.x + stones.offsetHeight <= 0) {
+            currstone.parentElement.removeChild(currstone);
+          };
+        });
 
 
         
@@ -279,6 +304,12 @@ function onGameStart() {
                 
                 hBonus.parentElement.removeChild(hBonus);
             };
+        });
+        
+        stones.forEach((currstone) => {
+          if (isCollision(wizard, currstone)) {
+            gameOverAction();
+          };
         });
 
         
