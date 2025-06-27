@@ -14,6 +14,7 @@ const leftEl = document.querySelector(".left");
 gameStartEl.addEventListener("click", onGameStart);
 
 
+// let isTest = false;
 
 
 // game start function
@@ -55,8 +56,6 @@ function onGameStart() {
         lastStoneSpown: 0,
         isActiveGame: true
     }
-
-
 
     // render wizard
     const wizard = document.createElement("div");
@@ -339,6 +338,13 @@ function onGameStart() {
         });
 
 
+        // if (isTest === false) {
+        //     // debugger;
+        //     isTest = true;
+        //     const test = document.createElement("h3");
+        //     test.textContent = "TEST";
+        //     gameAreaEL.appendChild(test);
+        // }
 
         if (scene.isActiveGame) {
             // game infinite loop
