@@ -7,6 +7,9 @@ const gamePointsEl = gameScoreEl.querySelector(".points");
 const gameHealthEl = document.querySelector(".health");
 const gameHealthPointsEl = gameHealthEl.querySelector(".health-points");
 
+const bottomEl = document.querySelector(".bottom");
+const leftEl = document.querySelector(".left");
+
 // game start listener
 gameStartEl.addEventListener("click", onGameStart);
 
@@ -38,7 +41,8 @@ function onGameStart() {
         bigCloudSpawnInterval: 4000,
         bigCloudsMovingMultiplier: 4.9,
         healthSpawnInterval: 20000,
-        stoneSpawnInterval: 2000
+        stoneSpawnInterval: 2000,
+        stoneMovingMultilier: 4
     };
 
     let scene = {
@@ -53,7 +57,7 @@ function onGameStart() {
     }
 
 
-    
+
     // render wizard
     const wizard = document.createElement("div");
     wizard.classList.add("wizard");
@@ -83,7 +87,7 @@ function onGameStart() {
     }
 
 
-    
+
     // game loop function
     function gameAction(timestamp) {
         const wizard = document.querySelector(".wizard");
@@ -147,9 +151,13 @@ function onGameStart() {
             cloud.x -= game.speed;
             cloud.style.left = cloud.x + "px";
 
-            if (cloud.x + clouds.offsetWidth <= 0) {
+            if (isCollision(cloud, leftEl)) {
                 cloud.parentElement.removeChild(cloud);
-            };
+            }
+            
+            // if (cloud.x + clouds.offsetWidth <= 0) {
+            //     cloud.parentElement.removeChild(cloud);
+            // };
         });
 
         // Add big clouds
@@ -170,11 +178,15 @@ function onGameStart() {
             bigCloud.x -= game.speed * game.bigCloudsMovingMultiplier;
             bigCloud.style.left = bigCloud.x + "px";
 
-            if (bigCloud.x + bigClouds.offsetWidth <= 0) {
+            if (isCollision(bigCloud, leftEl)) {
                 bigCloud.parentElement.removeChild(bigCloud);
-            };
+            }
+            
+            // if (bigCloud.x + bigClouds.offsetWidth <= 0) {
+            //     bigCloud.parentElement.removeChild(bigCloud);
+            // };
         });
-        
+
 
 
         // Add bugs
@@ -195,9 +207,13 @@ function onGameStart() {
             bug.x -= game.speed * 3;
             bug.style.left = bug.x + "px";
 
-            if (bug.x + bugs.offsetWidth <= 0) {
+            if (isCollision(bug, leftEl)) {
                 bug.parentElement.removeChild(bug);
             };
+            
+            // if (bug.x + bugs.offsetWidth <= 0) {
+            //     bug.parentElement.removeChild(bug);
+            // };
         });
 
         // Add health
@@ -210,7 +226,7 @@ function onGameStart() {
             gameAreaEL.appendChild(healthBonus);
             scene.lastHealthSpown = timestamp;
         }
-        
+
         // Modify healthBonus positions
         let healthBonuses = document.querySelectorAll(".health-bonus");
 
@@ -218,39 +234,41 @@ function onGameStart() {
             hBonus.x -= game.speed;
             hBonus.style.left = hBonus.x + "px";
 
-            if (hBonus.x + healthBonuses.offsetWidth <= 0) {
+
+            if (isCollision(hBonus, leftEl)) {
                 hBonus.parentElement.removeChild(hBonus);
-            };
+            }
         });
-        
+
         // Add stones
         if (timestamp - scene.lastStoneSpown > game.stoneSpawnInterval + 5000 * Math.random() && timestamp > 10000) {
-          let stone = document.createElement("div");
-          stone.classList.add("stone");
-          stone.x = gameAreaEL.offsetHeight - 60;
-          stone.style.top = stone.x + "px";
-          stone.style.left = (gameAreaEL.offsetWidth - 60) * Math.random() + "px";
-          gameAreaEL.appendChild(stone);
-          scene.lastStoneSpown = timestamp;
+            let stone = document.createElement("div");
+            stone.classList.add("stone");
+            //   stone.x = gameAreaEL.offsetHeight - 60;
+            stone.y = 0 + 60;
+            stone.style.top = stone.y + "px";
+            stone.style.left = (gameAreaEL.offsetWidth - 60) * Math.random() + "px";
+            gameAreaEL.appendChild(stone);
+            scene.lastStoneSpown = timestamp;
         }
-        
+
         // Modify stone positions
         let stones = document.querySelectorAll(".stone");
-        
+
         stones.forEach((currstone) => {
-          currstone.x -= game.speed * 4;
-          currstone.style.top = currstone.x + "px";
-          
-          if (currstone.x + stones.offsetHeight <= 0) {
-            currstone.parentElement.removeChild(currstone);
-          };
+            currstone.y += game.speed * game.stoneMovingMultilier;
+            currstone.style.top = currstone.y + "px";
+
+            if (isCollision(currstone, bottomEl)) {
+                currstone.parentElement.removeChild(currstone);
+            };
         });
 
 
-        
+
         // Aply score
         gamePointsEl.textContent = scene.score;
-        
+
         // Aply health
         gameHealthPointsEl.textContent = scene.health;
 
@@ -261,7 +279,7 @@ function onGameStart() {
             gameHealthEl.classList.remove("health-danger");
         }
 
-        // Midify fireball positions
+        // Modify fireball positions
         let fireBalls = document.querySelectorAll(".fire-ball");
 
 
@@ -279,9 +297,9 @@ function onGameStart() {
         bugs.forEach((bug) => {
             if (isCollision(wizard, bug)) {
                 scene.health--;
-                
+
                 if (scene.health < 0) {
-                  gameOverAction();  
+                    gameOverAction();
                 };
             };
 
@@ -301,18 +319,26 @@ function onGameStart() {
                 if (scene.health > 100) {
                     scene.health = 100
                 };
-                
+
                 hBonus.parentElement.removeChild(hBonus);
             };
         });
-        
+
         stones.forEach((currstone) => {
-          if (isCollision(wizard, currstone)) {
-            gameOverAction();
-          };
+            if (isCollision(wizard, currstone)) {
+                gameOverAction();
+            };
         });
 
-        
+        fireBalls.forEach((ball) => {
+            stones.forEach((x) => {
+                if (isCollision(ball, x)) {
+                    ball.parentElement.removeChild(ball);
+                };
+            });
+        });
+
+
 
         if (scene.isActiveGame) {
             // game infinite loop

@@ -29,7 +29,7 @@ body {
 .game-start:hover {
     color: chocolate;
     box-shadow: 1px 1px 2px 2px;
-    cursor: none;
+    cursor: pointer;
 }
 
 .game-over {
@@ -44,10 +44,28 @@ body {
     padding: 30px;
 }
 
+.game-over:hover {
+    color: white;
+    box-shadow: 1px 1px 2px 2px;
+    cursor: pointer;
+}
+
 .health-score-container {
   display: flex;
   justify-content: space-between;
   background-color: black;
+}
+
+.bottom {
+    background-color: black;
+}
+
+.left {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    background-color: black;
 }
 
 .game-score {
