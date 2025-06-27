@@ -14,7 +14,7 @@ const leftEl = document.querySelector(".left");
 gameStartEl.addEventListener("click", onGameStart);
 
 
-// let isTest = false;
+// let isBoss = false;
 
 
 // game start function
@@ -41,7 +41,7 @@ function onGameStart() {
         bugKillBonus: 2000,
         bigCloudSpawnInterval: 4000,
         bigCloudsMovingMultiplier: 4.9,
-        healthSpawnInterval: 20000,
+        healthSpawnInterval: 10000,
         stoneSpawnInterval: 2000,
         stoneMovingMultilier: 4
     };
@@ -240,17 +240,18 @@ function onGameStart() {
         });
 
         // Add stones
-        if (timestamp - scene.lastStoneSpown > game.stoneSpawnInterval + 5000 * Math.random() && timestamp > 10000) {
-            let stone = document.createElement("div");
-            stone.classList.add("stone");
-            //   stone.x = gameAreaEL.offsetHeight - 60;
-            stone.y = 0 + 60;
-            stone.style.top = stone.y + "px";
-            stone.style.left = (gameAreaEL.offsetWidth - 60) * Math.random() + "px";
-            gameAreaEL.appendChild(stone);
-            scene.lastStoneSpown = timestamp;
-        }
-
+        if (timestamp - scene.lastStoneSpown > game.stoneSpawnInterval + 5000 * Math.random() && timestamp >= 10000) {
+          let stone = document.createElement("div");
+          stone.classList.add("stone");
+          //   stone.x = gameAreaEL.offsetHeight - 60;
+          stone.y = 0 + 60;
+          stone.style.top = stone.y + "px";
+          stone.style.left = (gameAreaEL.offsetWidth - 60) * Math.random() + "px";
+          gameAreaEL.appendChild(stone);
+          scene.lastStoneSpown = timestamp;
+        };
+          
+        
         // Modify stone positions
         let stones = document.querySelectorAll(".stone");
 
@@ -338,13 +339,17 @@ function onGameStart() {
         });
 
 
-        // if (isTest === false) {
-        //     // debugger;
-        //     isTest = true;
-        //     const test = document.createElement("h3");
-        //     test.textContent = "TEST";
-        //     gameAreaEL.appendChild(test);
-        // }
+        // if (isBoss === false) {
+            
+        //     if (scene.score >= 1000) {
+        //       isBoss = true;
+        //       const boss = document.createElement("h3");
+        //       boss.classList.add("boss")
+        //       boss.textContent = "BOSS";
+        //       gameAreaEL.appendChild(boss);
+        //     };
+            
+        // };
 
         if (scene.isActiveGame) {
             // game infinite loop
