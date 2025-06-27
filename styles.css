@@ -159,3 +159,7 @@ body {
   background-image: url('./images/stone.png');
   background-size: cover;
 }
+
+.boss {
+  top: 50%;
+}
